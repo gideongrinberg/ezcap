@@ -1,0 +1,20 @@
+{
+  "name": "parcel-vanilla-starter",
+  "private": true,
+  "version": "0.0.0",
+  "source": "src/index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build"
+  },
+  "dependencies": {
+    "@shoelace-style/shoelace": "^2.20.1",
+    "basscss": "^8.1.0",
+    "cash-dom": "^8.1.5",
+    "ffmpeg.js": "^4.2.9003",
+    "nouislider": "^15.8.1"
+  },
+  "devDependencies": {
+    "parcel": "^2.14.0"
+  }
+}

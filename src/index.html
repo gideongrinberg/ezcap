@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Parcel Vanilla App</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/dist/themes/light.css"
+        />
+        <script src="./shoelace.js" type="module"></script>
+        <script src="./index.js" type="module" defer></script>
+    </head>
+    <body>
+        <div class="centered">
+            <video class="mb1" id="video" hidden playsinline autoplay></video>
+            <div class="controls">
+                <div class="start-instructions">
+                    <div class="logo">
+                        <span id="logo-ez">ez</span
+                        ><span id="logo-cap">cap</span>
+                    </div>
+                    <p>
+                        Create videos and GIFs from a screen recording,
+                        completely in browser.
+                    </p>
+                    <p>Works best in modern browsers.</p>
+                    <sl-button id="start-btn" variant="primary"
+                        >Start recording</sl-button
+                    >
+                </div>
+                <div id="stop-btn-wrapper" hidden>
+                    <sl-button id="stop-btn">Stop recording</sl-button>
+                </div>
+                <div class="download-controls" hidden>
+                    <div class="editor-controls">
+                        <div class="mb1" id="slider"></div>
+                    </div>
+                    <sl-button-group>
+                        <sl-button id="trim-video">Trim video</sl-button>
+                        <sl-button id="download-webm">Download .webm</sl-button>
+                        <sl-button id="download-mp4">Download .mp4</sl-button>
+                        <sl-button id="download-gif">Download .gif</sl-button>
+                    </sl-button-group>
+                    <div class="download-instructions">
+                        <p>
+                            You can trim the video using the slider, then
+                            download it using the buttons. Downloading as WebM
+                            is fastest.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
