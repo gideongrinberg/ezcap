@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -6,7 +6,6 @@
         <title>
             ezcap - Free Browser Screen Recorder | Create GIFs & Videos
         </title>
-        <link rel="stylesheet" href="src/style.css" />
         <meta
             name="description"
             content="ezcap is a browser-based screen recorder that lets you capture and trim videos and GIFs entirely in your browser. No downloads required."
@@ -19,6 +18,8 @@
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap"
             rel="stylesheet"
         />
+        <link rel="icon" type="image/x-icon" href="src/assets/favicon.ico" />
+        <link rel="stylesheet" href="src/style.css" />
 
         <script src="src/shoelace.js" type="module"></script>
         <script src="src/index.js" type="module" defer></script>
@@ -49,6 +50,12 @@
                         Your browser does not support screen recording. Please
                         try using Firefox or Chrome, or update your browser.
                     </p>
+                    <noscript>
+                        <p class="helper-text">
+                            This website requires JavaScript to function. Please
+                            enable JavaScript.
+                        </p>
+                    </noscript>
                 </div>
                 <div id="stop-btn-wrapper" hidden>
                     <sl-button id="stop-btn">Stop recording</sl-button>
