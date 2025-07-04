@@ -8,15 +8,21 @@ let recorder;
 let slider;
 let recordedChunks = [];
 
-if (!navigator.mediaDevices?.getDisplayMedia || !MediaRecorder || !MediaRecorder.isTypeSupported("video/webm")) {
+if (
+    !navigator.mediaDevices?.getDisplayMedia ||
+    !MediaRecorder ||
+    !MediaRecorder.isTypeSupported("video/webm")
+) {
     $("#start-btn")[0].disabled = true;
     $("#unsupported-message")[0].hidden = false;
 } else if (!WebAssembly) {
-    $(".helper-text").text("Your browser does not support editing or converting video files, so you can only download the webm file. Use Chrome or Firefox, or update your browser for the best experience.");
+    $(".helper-text").text(
+        "Your browser does not support editing or converting video files, so you can only download the webm file. Use Chrome or Firefox, or update your browser for the best experience.",
+    );
     $("#download-mp4")[0].disabled = true;
     $("#download-gif").disabled = true;
     $("#trim-video").disabled = true;
-    $("#slider").hide()
+    $("#slider").hide();
 }
 
 const ffmpegInstance = new FFmpeg();
@@ -26,10 +32,10 @@ ffmpegInstance.on("log", ({ type, message }) => {
 
 async function loadFFmpeg() {
     if (ffmpegInstance.loaded) return ffmpegInstance;
-    console.log("started loading ffmpeg")
-    console.time("Loading ffmpeg")
+    console.log("started loading ffmpeg");
+    console.time("Loading ffmpeg");
     await ffmpegInstance.load();
-    console.timeEnd("Loading ffmpeg")
+    console.timeEnd("Loading ffmpeg");
     return ffmpegInstance;
 }
 
@@ -45,7 +51,7 @@ $("#start-btn").on("click", async () => {
         console.error(error);
     }
 
-    window.requestIdleCallback(loadFFmpeg)
+    window.requestIdleCallback(loadFFmpeg);
 
     // Create the recorder
     recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
@@ -88,14 +94,14 @@ async function runButton($button, cb) {
     } finally {
         spinner.remove();
         $button.append(originalContent);
-        $button.css("width", "")
+        $button.css("width", "");
     }
     await new Promise(requestAnimationFrame);
     return Promise.resolve(ret);
 }
 
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function downloadUrl(url, name) {
@@ -110,12 +116,20 @@ async function downloadMp4(url) {
     let res = await fetch(url);
 
     await ffmpeg.writeFile("input.webm", new Uint8Array(await res.bytes()));
-    console.time("Converting to mp4")
-    await ffmpeg.exec(['-i', 'input.webm', '-preset', 'ultrafast', 'output.mp4']);
-    console.timeEnd("Converting to mp4")
+    console.time("Converting to mp4");
+    await ffmpeg.exec([
+        "-i",
+        "input.webm",
+        "-preset",
+        "ultrafast",
+        "output.mp4",
+    ]);
+    console.timeEnd("Converting to mp4");
 
     let data = await ffmpeg.readFile("output.mp4");
-    let outputUrl = URL.createObjectURL(new Blob([data], { type: "video/mp4" }));
+    let outputUrl = URL.createObjectURL(
+        new Blob([data], { type: "video/mp4" }),
+    );
     return downloadUrl(outputUrl, "recording.mp4");
 }
 
@@ -138,7 +152,7 @@ async function stopRecording() {
     $(".download-controls")[0].hidden = false;
     $("#download-webm").on("click", async () => {
         await runButton($("#download-webm"), async () => {
-            await downloadUrl(url, "recording.webm")
+            await downloadUrl(url, "recording.webm");
         });
     });
 
