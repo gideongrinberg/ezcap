@@ -1,4 +1,5 @@
 import $ from "cash-dom";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
 import * as nuSlider from "nouislider";
 import "nouislider/dist/nouislider.css";
 
@@ -6,6 +7,20 @@ let stream;
 let recorder;
 let slider;
 let recordedChunks = [];
+
+const ffmpegInstance = new FFmpeg();
+ffmpegInstance.on("log", ({type, message}) => {
+    console.debug(`[ffmpeg ${type}]: ${message}`);
+});
+
+async function loadFFmpeg() {
+    if (ffmpegInstance.loaded) return ffmpegInstance;
+    console.log("started loading ffmpeg")
+    console.time("Loading ffmpeg")
+    await ffmpegInstance.load();
+    console.timeEnd("Loading ffmpeg")
+    return ffmpegInstance;
+}
 
 $("#start-btn").on("click", async () => {
     // Start streaming the user's display.
@@ -18,6 +33,8 @@ $("#start-btn").on("click", async () => {
         alert(`Could not start screen recording: ${error}`);
         console.error(error);
     }
+
+    window.requestIdleCallback(loadFFmpeg)
 
     // Create the recorder
     recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
@@ -77,6 +94,20 @@ async function downloadUrl(url, name) {
     a.click();
 }
 
+async function downloadMp4(url) {
+    let ffmpeg = await loadFFmpeg();
+    let res = await fetch(url);
+
+    await ffmpeg.writeFile("input.webm", new Uint8Array(await res.bytes()));
+    console.time("Converting to mp4")
+    await ffmpeg.exec(['-i', 'input.webm', '-preset', 'ultrafast', 'output.mp4']);
+    console.timeEnd("Converting to mp4")
+
+    let data = await ffmpeg.readFile("output.mp4");
+    let outputUrl = URL.createObjectURL(new Blob([data], {type: "video/mp4"}));
+    return downloadUrl(outputUrl, "recording.mp4");
+}
+
 async function stopRecording() {
     console.log("stopping");
     stream.getTracks().forEach((track) => track.stop());
@@ -97,6 +128,12 @@ async function stopRecording() {
     $("#download-webm").on("click", async () => {
         await runButton($("#download-webm"), async () => {
             await downloadUrl(url, "recording.webm")
+        });
+    });
+
+    $("#download-mp4").on("click", async () => {
+        await runButton($("#download-mp4"), async () => {
+            await downloadMp4(url);
         });
     });
 }
