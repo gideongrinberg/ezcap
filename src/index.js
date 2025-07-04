@@ -136,8 +136,8 @@ async function downloadMp4(url) {
 async function stopRecording() {
     console.log("stopping");
     stream.getTracks().forEach((track) => track.stop());
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
-    const url = URL.createObjectURL(blob);
+    let blob = new Blob(recordedChunks, { type: "video/webm" });
+    let url = URL.createObjectURL(blob);
 
     const videoEl = $("video")[0];
     videoEl.srcObject = null;
@@ -150,6 +150,35 @@ async function stopRecording() {
 
     $("#stop-btn-wrapper")[0].hidden = true;
     $(".download-controls")[0].hidden = false;
+    $("#trim-video").on("click", async () => {
+        await runButton($("#trim-video"), async () => {
+            const ffmpeg = await loadFFmpeg();
+            const res = await fetch(url);
+            const sliderValues = slider.get().map(v => parseFloat(v));
+
+            await ffmpeg.writeFile("input.webm", new Uint8Array(await res.bytes()));
+            console.time("Trimming video");
+            await ffmpeg.exec([
+                "-ss", sliderValues[0].toFixed(2),
+                "-i", "input.webm",
+                "-t", (sliderValues[1] - sliderValues[0]).toFixed(2),
+                "-vf", "scale=1280:-1",
+                "-c:v", "libvpx",
+                "-crf", "30",
+                "-b:v", "500k",
+                "-speed", "8",
+                "-an",
+                "output.webm"
+            ]);
+            console.timeEnd("Trimming video");
+
+            let data = await ffmpeg.readFile("output.webm");
+            blob = new Blob([data], { type: "video/webm" });
+            url = URL.createObjectURL(blob);
+            videoEl.src = url;
+            videoEl.currentTime = 0;
+        });
+    })
     $("#download-webm").on("click", async () => {
         await runButton($("#download-webm"), async () => {
             await downloadUrl(url, "recording.webm");
@@ -166,6 +195,17 @@ async function stopRecording() {
 function setupEditor() {
     const videoEl = $("#video")[0];
     let max = videoEl.duration;
+    if (slider) {
+        slider.updateOptions({
+            start: [0, max],
+            range: {
+                min: 0,
+                max: max,
+            },
+        });
+        return;
+    }
+
     slider = nuSlider.create($("#slider")[0], {
         start: [0, max],
         range: {
