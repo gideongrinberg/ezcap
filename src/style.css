@@ -57,9 +57,12 @@ body {
     margin-right: auto;
 }
 
-.download-instructions {
+.helper-text {
     color: var(--sl-color-neutral-400);
     font-style: italic;
-    margin-top: -0.5rem;
     font-size: 0.75em;
+}
+
+.download-instructions {
+    margin-top: -0.5rem;
 }

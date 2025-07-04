@@ -8,8 +8,19 @@ let recorder;
 let slider;
 let recordedChunks = [];
 
+if (!navigator.mediaDevices?.getDisplayMedia || !MediaRecorder || !MediaRecorder.isTypeSupported("video/webm")) {
+    $("#start-btn")[0].disabled = true;
+    $("#unsupported-message")[0].hidden = false;
+} else if (!WebAssembly) {
+    $(".helper-text").text("Your browser does not support editing or converting video files, so you can only download the webm file. Use Chrome or Firefox, or update your browser for the best experience.");
+    $("#download-mp4")[0].disabled = true;
+    $("#download-gif").disabled = true;
+    $("#trim-video").disabled = true;
+    $("#slider").hide()
+}
+
 const ffmpegInstance = new FFmpeg();
-ffmpegInstance.on("log", ({type, message}) => {
+ffmpegInstance.on("log", ({ type, message }) => {
     console.debug(`[ffmpeg ${type}]: ${message}`);
 });
 
@@ -104,7 +115,7 @@ async function downloadMp4(url) {
     console.timeEnd("Converting to mp4")
 
     let data = await ffmpeg.readFile("output.mp4");
-    let outputUrl = URL.createObjectURL(new Blob([data], {type: "video/mp4"}));
+    let outputUrl = URL.createObjectURL(new Blob([data], { type: "video/mp4" }));
     return downloadUrl(outputUrl, "recording.mp4");
 }
 

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -35,6 +35,10 @@
                     <sl-button id="start-btn" variant="primary"
                         >Start recording</sl-button
                     >
+                    <p class="helper-text" id="unsupported-message" hidden>
+                        Your browser does not support screen recording. Please
+                        try using Firefox or Chrome, or update your browser.
+                    </p>
                 </div>
                 <div id="stop-btn-wrapper" hidden>
                     <sl-button id="stop-btn">Stop recording</sl-button>
@@ -49,7 +53,7 @@
                         <sl-button id="download-mp4">Download .mp4</sl-button>
                         <sl-button id="download-gif">Download .gif</sl-button>
                     </sl-button-group>
-                    <div class="download-instructions">
+                    <div class="helper-text download-instructions">
                         <p>
                             You can trim the video using the slider, then
                             download it using the buttons. Downloading as WebM
