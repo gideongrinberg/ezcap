@@ -1,21 +1,21 @@
 {
-  "name": "ezcap",
-  "private": true,
-  "version": "0.0.0",
-  "source": "src/index.html",
-  "scripts": {
-    "start": "vite serve",
-    "build": "vite build"
-  },
-  "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.15",
-    "@ffmpeg/util": "^0.12.2",
-    "@shoelace-style/shoelace": "^2.20.1",
-    "basscss": "^8.1.0",
-    "cash-dom": "^8.1.5",
-    "nouislider": "^15.8.1"
-  },
-  "devDependencies": {
-    "vite": "^7.0.1"
-  }
+    "name": "ezcap",
+    "private": true,
+    "version": "0.0.0",
+    "source": "src/index.html",
+    "scripts": {
+        "start": "vite serve",
+        "build": "vite build"
+    },
+    "dependencies": {
+        "@ffmpeg/ffmpeg": "^0.12.15",
+        "@ffmpeg/util": "^0.12.2",
+        "@shoelace-style/shoelace": "^2.20.1",
+        "basscss": "^8.1.0",
+        "cash-dom": "^8.1.5",
+        "nouislider": "^15.8.1"
+    },
+    "devDependencies": {
+        "vite": "^7.0.1"
+    }
 }

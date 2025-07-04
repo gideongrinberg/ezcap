@@ -1,7 +1,7 @@
-import { defineConfig } from "vite"
+import { defineConfig } from "vite";
 export default defineConfig({
     build: {
-        outDir: 'dist/'
+        outDir: "dist/",
     },
     optimizeDeps: {
         exclude: ["@ffmpeg/ffmpeg", "@ffmpeg/util"],
@@ -11,5 +11,5 @@ export default defineConfig({
             "Cross-Origin-Opener-Policy": "same-origin",
             "Cross-Origin-Embedder-Policy": "require-corp",
         },
-    }
-})
+    },
+});

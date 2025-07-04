@@ -30,9 +30,7 @@ function formatTime(seconds) {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-    return [hrs, mins, secs]
-        .map(v => String(v).padStart(2, '0'))
-        .join(':');
+    return [hrs, mins, secs].map((v) => String(v).padStart(2, "0")).join(":");
 }
 
 ffmpegInstance.on("log", ({ type, message }) => {
@@ -42,7 +40,7 @@ ffmpegInstance.on("log", ({ type, message }) => {
         const speedMatch = message.match(/speed=([\d.]+)x/);
         if (!timeMatch || !speedMatch) return null;
 
-        let [hh, mm, ss] = timeMatch[1].split(':');
+        let [hh, mm, ss] = timeMatch[1].split(":");
         let time = parseFloat(hh) * 3600 + parseFloat(mm) * 60 + parseFloat(ss);
         let speed = parseFloat(speedMatch[1]);
         let total = time / speed;
@@ -50,7 +48,7 @@ ffmpegInstance.on("log", ({ type, message }) => {
         $("#alert-corner")[0].toast();
         $("#alert-text").text(`${formatTime(time)} / ${formatTime(total)}`);
     } else if (type == "stderr" && message.startsWith("Aborted")) {
-        console.log("got aborted")
+        console.log("got aborted");
         $("#alert-corner")[0].remove();
     }
 });
@@ -179,21 +177,32 @@ async function stopRecording() {
         await runButton($("#trim-video"), async () => {
             const ffmpeg = await loadFFmpeg();
             const res = await fetch(url);
-            const sliderValues = slider.get().map(v => parseFloat(v));
+            const sliderValues = slider.get().map((v) => parseFloat(v));
 
-            await ffmpeg.writeFile("input.webm", new Uint8Array(await res.bytes()));
+            await ffmpeg.writeFile(
+                "input.webm",
+                new Uint8Array(await res.bytes()),
+            );
             console.time("Trimming video");
             await ffmpeg.exec([
-                "-ss", sliderValues[0].toFixed(2),
-                "-i", "input.webm",
-                "-t", (sliderValues[1] - sliderValues[0]).toFixed(2),
-                "-vf", "scale=1280:-1",
-                "-c:v", "libvpx",
-                "-crf", "30",
-                "-b:v", "500k",
-                "-speed", "8",
+                "-ss",
+                sliderValues[0].toFixed(2),
+                "-i",
+                "input.webm",
+                "-t",
+                (sliderValues[1] - sliderValues[0]).toFixed(2),
+                "-vf",
+                "scale=1280:-1",
+                "-c:v",
+                "libvpx",
+                "-crf",
+                "30",
+                "-b:v",
+                "500k",
+                "-speed",
+                "8",
                 "-an",
-                "output.webm"
+                "output.webm",
             ]);
             console.timeEnd("Trimming video");
 
@@ -203,7 +212,7 @@ async function stopRecording() {
             videoEl.src = url;
             videoEl.currentTime = 0;
         });
-    })
+    });
     $("#download-webm").on("click", async () => {
         await runButton($("#download-webm"), async () => {
             await downloadUrl(url, "recording.webm");
