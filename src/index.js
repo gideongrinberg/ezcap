@@ -26,8 +26,33 @@ if (
 }
 
 const ffmpegInstance = new FFmpeg();
+function formatTime(seconds) {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    return [hrs, mins, secs]
+        .map(v => String(v).padStart(2, '0'))
+        .join(':');
+}
+
 ffmpegInstance.on("log", ({ type, message }) => {
     console.debug(`[ffmpeg ${type}]: ${message}`);
+    if (type == "stderr" && message.startsWith("frame=")) {
+        const timeMatch = message.match(/time=(\d+:\d+:\d+\.\d+)/);
+        const speedMatch = message.match(/speed=([\d.]+)x/);
+        if (!timeMatch || !speedMatch) return null;
+
+        let [hh, mm, ss] = timeMatch[1].split(':');
+        let time = parseFloat(hh) * 3600 + parseFloat(mm) * 60 + parseFloat(ss);
+        let speed = parseFloat(speedMatch[1]);
+        let total = time / speed;
+
+        $("#alert-corner")[0].toast();
+        $("#alert-text").text(`${formatTime(time)} / ${formatTime(total)}`);
+    } else if (type == "stderr" && message.startsWith("Aborted")) {
+        console.log("got aborted")
+        $("#alert-corner")[0].remove();
+    }
 });
 
 async function loadFFmpeg() {

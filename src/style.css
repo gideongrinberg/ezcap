@@ -66,6 +66,13 @@ body {
     margin-top: -0.5rem;
 }
 
+.alert-corner {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1000;
+}
+
 /* Github corner styling */
 .github-corner {
     z-index: 1000;
