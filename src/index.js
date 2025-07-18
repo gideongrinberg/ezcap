@@ -45,7 +45,8 @@ ffmpegInstance.on("log", ({ type, message }) => {
         }
 
         let [hh, mm, ss] = timeMatch[1].split(":");
-        let elapsed = parseFloat(hh) * 3600 + parseFloat(mm) * 60 + parseFloat(ss);
+        let elapsed =
+            parseFloat(hh) * 3600 + parseFloat(mm) * 60 + parseFloat(ss);
 
         let speed = parseFloat(speedMatch[1]);
         let estimatedTotal;
@@ -54,28 +55,26 @@ ffmpegInstance.on("log", ({ type, message }) => {
                 avgSpeed = speed;
                 speedSamples = 1;
             } else {
-                avgSpeed = (speedSamples * avgSpeed + speed) / (++speedSamples);
+                avgSpeed = (speedSamples * avgSpeed + speed) / ++speedSamples;
             }
 
             estimatedTotal = vidDuration / avgSpeed;
-
         } else {
-            speed = 0.7
+            speed = 0.7;
         }
 
         let percent = elapsed / estimatedTotal;
         if (percent > progress) {
             progress = percent;
-            pb.attr("value", percent * 100)
+            pb.attr("value", percent * 100);
             pb[0].indeterminate = false;
         }
-
     } else if (type == "stderr" && message.startsWith("Aborted")) {
         console.log("got aborted");
         vidDuration = -1;
         avgSpeed = -1;
         speedSamples = -1;
-        pb.attr("value", 100)
+        pb.attr("value", 100);
     }
 });
 
@@ -159,7 +158,6 @@ async function runButton($button, cb, showProgress = true, name = undefined) {
             }
 
             $("#progress-dialog").hide();
-
         }, 3000);
     }
 
@@ -201,10 +199,7 @@ async function trimVideo(url, setting) {
     const res = await fetch(url);
     const sliderValues = slider.get().map((v) => parseFloat(v));
 
-    await ffmpeg.writeFile(
-        "input.webm",
-        new Uint8Array(await res.bytes()),
-    );
+    await ffmpeg.writeFile("input.webm", new Uint8Array(await res.bytes()));
     console.time("Trimming video");
     if (setting == "better") {
         await ffmpeg.exec([
@@ -228,7 +223,6 @@ async function trimVideo(url, setting) {
             "libvorbis",
             "output.webm",
         ]);
-
     } else {
         await ffmpeg.exec([
             "-ss",
@@ -278,20 +272,25 @@ async function stopRecording() {
     $("#stop-btn-wrapper")[0].hidden = true;
     $(".download-controls")[0].hidden = false;
     $("#trim-video").on("click", () => {
-        $("#trim-dialog")[0].show()
+        $("#trim-dialog")[0].show();
         $("#trim-start").on("click", async () => {
             let setting = $("#trim-setting").val();
             if (setting) {
-                runButton($("#trim-start"), async () => {
-                    $("#trim-dialog").hide();
-                    await new Promise(requestAnimationFrame);
+                runButton(
+                    $("#trim-start"),
+                    async () => {
+                        $("#trim-dialog").hide();
+                        await new Promise(requestAnimationFrame);
 
-                    url = await trimVideo(url, setting);
-                    videoEl.src = url;
-                    videoEl.currentTime = 0;
-                }, true, "Trimming video")
+                        url = await trimVideo(url, setting);
+                        videoEl.src = url;
+                        videoEl.currentTime = 0;
+                    },
+                    true,
+                    "Trimming video",
+                );
             }
-        })
+        });
     });
 
     $("#download-webm").on("click", async () => {
@@ -308,32 +307,32 @@ async function stopRecording() {
 }
 
 async function setupEditor() {
-    console.log("loading editor")
+    console.log("loading editor");
     const videoEl = $("#video")[0];
 
     let max = videoEl.duration;
     // Chrome does not store video duration in the metadata,
-    // so we need to forcibly load it by subscribing to "timeupdate" and scrubbing past the end of the video 
+    // so we need to forcibly load it by subscribing to "timeupdate" and scrubbing past the end of the video
     if (max === Infinity) {
         max = await new Promise((resolve) => {
             let pb = $("#progress-dialog");
-            pb.attr("label", "Loading video")
+            pb.attr("label", "Loading video");
             pb[0].show();
             function getDuration() {
                 let duration = videoEl.duration;
                 console.log(duration);
-                videoEl.removeEventListener('timeupdate', getDuration)
+                videoEl.removeEventListener("timeupdate", getDuration);
                 videoEl.currentTime = 0;
                 resolve(duration);
             }
 
-            videoEl.addEventListener('timeupdate', getDuration);
-            videoEl.currentTime = 1e101
+            videoEl.addEventListener("timeupdate", getDuration);
+            videoEl.currentTime = 1e101;
         });
 
         $("#progress-dialog").hide();
         await new Promise(requestAnimationFrame);
-        $("#progress-dialog").attr("label", "Performing operation")
+        $("#progress-dialog").attr("label", "Performing operation");
     }
 
     vidDuration = max;

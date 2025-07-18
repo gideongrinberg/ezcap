@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -27,7 +27,10 @@
         <script>
             window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
         </script>
-        <script defer src="https://ezcap.vercel.app/_vercel/insights/script.js"></script>
+        <script
+            defer
+            src="https://ezcap.vercel.app/_vercel/insights/script.js"
+        ></script>
     </head>
     <body>
         <div class="centered">
@@ -83,15 +86,16 @@
             </div>
         </div>
         <sl-dialog label="Performing operation" id="progress-dialog">
-            <sl-progress-bar indeterminate id="progress-bar">  
-            </sl-progress-bar>
+            <sl-progress-bar indeterminate id="progress-bar"> </sl-progress-bar>
         </sl-dialog>
         <sl-dialog label="Select trim setting" id="trim-dialog">
             <sl-select id="trim-setting">
                 <sl-option value="fast">Faster, lower quality</sl-option>
                 <sl-option value="better">Slower, better quality</sl-option>
             </sl-select>
-            <sl-button slot="footer" variant="primary" id="trim-start">Trim</sl-button>
+            <sl-button slot="footer" variant="primary" id="trim-start"
+                >Trim</sl-button
+            >
         </sl-dialog>
     </body>
 </html>
