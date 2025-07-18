@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8" />
@@ -88,8 +88,12 @@
         <sl-dialog label="Performing operation" id="progress-dialog">
             <sl-progress-bar indeterminate id="progress-bar"> </sl-progress-bar>
         </sl-dialog>
-        <sl-dialog label="Select trim setting" id="trim-dialog">
-            <sl-select id="trim-setting">
+        <sl-dialog
+            label="Select trim setting"
+            id="trim-dialog"
+            class="dialog-overview"
+        >
+            <sl-select id="trim-setting" hoist>
                 <sl-option value="fast">Faster, lower quality</sl-option>
                 <sl-option value="better">Slower, better quality</sl-option>
             </sl-select>
@@ -97,5 +101,9 @@
                 >Trim</sl-button
             >
         </sl-dialog>
+        <sl-alert id="alert-corner" variant="success">
+            <sl-icon slot="icon" name="check-circle-fill"></sl-icon>
+            <span id="alert-text"></span>
+        </sl-alert>
     </body>
 </html>

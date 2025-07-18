@@ -127,7 +127,7 @@ $("#start-btn").on("click", async () => {
 
 /** Utility function that replaces a button with a loading indicator, runs a callback, 
     reverts the button, and returns the value */
-async function runButton($button, cb, showProgress = true, name = undefined) {
+async function runButton($button, cb, showProgress = true, name = "Performing operation") {
     const width = $button.outerWidth();
     $button.css("width", width + "px");
 
@@ -136,9 +136,7 @@ async function runButton($button, cb, showProgress = true, name = undefined) {
 
     $button.append(spinner);
     if (showProgress) {
-        if (name) {
-            $("#progress-dialog").attr("label", name);
-        }
+        $("#progress-dialog").attr("label", name);
         $("#progress-dialog").show();
     }
     await new Promise(requestAnimationFrame);
@@ -152,13 +150,13 @@ async function runButton($button, cb, showProgress = true, name = undefined) {
     }
 
     if (showProgress) {
-        setTimeout(() => {
-            if (name) {
-                $("#progress-dialog").attr("label", "Performing operation");
-            }
+        if (name) {
+            $("#progress-dialog").attr("label", "Performing operation");
+        }
 
-            $("#progress-dialog").hide();
-        }, 3000);
+        $("#alert-text").text(`Finished ${name.toLowerCase()} successfully`);
+        $("#alert-corner")[0].toast();
+        $("#progress-dialog").hide();
     }
 
     await new Promise(requestAnimationFrame);
@@ -271,14 +269,16 @@ async function stopRecording() {
 
     $("#stop-btn-wrapper")[0].hidden = true;
     $(".download-controls")[0].hidden = false;
-    $("#trim-video").on("click", () => {
+    $("#trim-video").on("click", async () => {
         $("#trim-dialog")[0].show();
         $("#trim-start").on("click", async () => {
             let setting = $("#trim-setting").val();
             if (setting) {
-                runButton(
+                await runButton(
                     $("#trim-start"),
                     async () => {
+                        $("#progress-dialog")[0].show();
+                        await new Promise(requestAnimationFrame);
                         $("#trim-dialog").hide();
                         await new Promise(requestAnimationFrame);
 
@@ -296,7 +296,7 @@ async function stopRecording() {
     $("#download-webm").on("click", async () => {
         await runButton($("#download-webm"), async () => {
             await downloadUrl(url, "recording.webm");
-        });
+        }, false);
     });
 
     $("#download-mp4").on("click", async () => {
