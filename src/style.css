@@ -107,3 +107,15 @@ body {
     right: 1rem;
     z-index: 1000;
 }
+
+.fit-text {
+  display: inline-block !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  vertical-align: baseline !important;
+}
+
+.centered {
+    text-align: center;
+}

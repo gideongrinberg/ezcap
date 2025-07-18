@@ -82,9 +82,16 @@
                 </div>
             </div>
         </div>
-        <sl-alert id="alert-corner" variant="primary">
-            <sl-icon slot="icon" name="info-circle"></sl-icon>
-            Performing operation: <span id="alert-text"></span>
-        </sl-alert>
+        <sl-dialog label="Performing operation" id="progress-dialog">
+            <sl-progress-bar indeterminate id="progress-bar">  
+            </sl-progress-bar>
+        </sl-dialog>
+        <sl-dialog label="Select trim setting" id="trim-dialog">
+            <sl-select id="trim-setting">
+                <sl-option value="fast">Faster, lower quality</sl-option>
+                <sl-option value="better">Slower, better quality</sl-option>
+            </sl-select>
+            <sl-button slot="footer" variant="primary" id="trim-start">Trim</sl-button>
+        </sl-dialog>
     </body>
 </html>
